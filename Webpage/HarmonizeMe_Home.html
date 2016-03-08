@@ -79,7 +79,17 @@
                     <div class="col-md-8 col-md-offset-2">
                         <h1 class="brand-heading">HarmonizeMe</h1>
                         
-                        <p class="intro-text" style="font-size:25px">Created by Alexander Fang, Julia Wilkins, and Nathan Yeazel </p>
+                        <!-- <p class="intro-text" style="font-size:25px">Created by Alexander Fang, Julia Wilkins, and Nathan Yeazel </p> -->
+
+                        <table style="font-size: 25px; width:100%; table-layout: fixed;">
+                                <tr>
+                                    <td>Alexander Fang</td>
+                                    <td>Julia Wilkins</td>
+                                    <td>Nathan Yeazel</td>
+                                </tr> 
+                                
+                        </table>
+                        <br>
                         <p>Northwestern University, EECS 352, Professor Bryan Pardo<br>Contact: <a href="mailto:juliawilkins2018@u.northwestern.edu">juliawilkins2018@u.northwestern.edu</a></p>
 
                         <a href="#about" class="btn btn-circle page-scroll">
@@ -96,10 +106,17 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
                 <h2>About HarmonizeMe</h2>
-                <p>Motivate the problem: (what are we trying to do, why anyone should care:</p>
-                <p>Describe what we're doing in high level terms:</p>
-                <p>Describe how we built/tested (what's our dataset, how do we measure sucess:)</p>
-                <p>Describe some results (how well it works, >paragraph</p>
+                <p style="text-align: left">
+                    HarmonizeMe is a Python-based web application that automatically generates chordal harmony to accompany a user's sung melodic input.  The user first identifies the desired key of their melody, and then sings a short melodic line.  HarmonizeMe then applies light pitch correction to the melodic line to ensure that it contains only diatonic pitches to the selected key.  The user then selects the chord that they would like to harmonize each note with.  The user is limited to I, ii6, IV, and V chords in major keys only at this point in time. For example, if the user selected the key of C major and the first pitch they sang was an 'F', they would have the option of creating a IV or ii6 chord to accompany their sung pitch. We then use pitch shifting to essentially harmonize their voice with itself and create a 3 voice harmony.
+                </p>
+                 <p style="text-align: left">
+                    HarmonizeMe could be used as an interesting tool for composers to quickly hear how various harmonies sound without actually needing multiple singers present.  It is also simply a fun application for users who are unfamiliar with choral harmony to play around with.
+
+                </p>    
+                 <p style="text-align: left">
+                    To test our product, we will compare HarmonizeMe to an existing product: Harmony Voice.  Harmony Voice automatically harmonizes a user's sung melody, among many other features.  We will objectively quantify success based on whether or not the correct pitches are detected and harmonized.  We also anticpate some subjective testing in which a musician with a trained ear is asked to determine how 'good' the generated harmony sounds based on the original sung melody.
+                </p>
+
 
                 
             </div>
