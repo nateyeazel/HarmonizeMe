@@ -146,3 +146,5 @@ def pitch_from_midinum(m):
     return 440.0 * (2.0 ** ((m - 69.0) / 12.0))
 
 
+test, sr = librosa.load('q10test.wav', 44100)
+print musical_detect_pitch(test)
