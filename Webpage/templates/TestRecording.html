@@ -8,7 +8,10 @@
 	<body>
 		<h1>HarmonizeMe</h1>
 		<h2>Sing into your microphone and make a chorus!</h1>
-		<button onclick="startRecording(this)">Start Recording</button>
-		<button onclick="stopRecording(this);" disabled>stop</button>
+		<button onclick="toggleRecording(this)">Start Recording</button>
+		<a id="save" href="#">
+			<button>Save Audio</button>
+		</a>
+		<!-- <button onclick="stopRecording(this);" disabled>stop</button> -->
 	</body>
 </html>
