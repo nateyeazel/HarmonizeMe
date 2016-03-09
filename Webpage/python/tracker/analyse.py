@@ -145,6 +145,13 @@ def pitch_from_midinum(m):
     if m is None: return None
     return 440.0 * (2.0 ** ((m - 69.0) / 12.0))
 
-
+print 'hello'
 test, sr = librosa.load('q10test.wav', 44100)
-print musical_detect_pitch(test)
+a440, sr = librosa.load('a440.wav', 44100)
+test = test[16116:26641] #should be middle C, about 261 Hz
+#test = test[33973:42772]
+test = numpy.concatenate((test, test, test, test, test, test, test))
+print str(detect_pitch(test))
+#print str(detect_pitch(a440))
+#for ii in range(0, 30):
+#    print str(detect_pitch(test[ii*1000 : (ii+5)*1000]))

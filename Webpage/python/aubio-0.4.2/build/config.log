@@ -1,0 +1,185 @@
+# project aubio (0.4.2) configured on Wed Mar  9 01:50:03 2016 by
+# waf 1.8.12 (abi 98, python 2070bf0 on darwin)
+# using ./waf configure build
+#
+----------------------------------------
+Setting top to
+/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2
+----------------------------------------
+Setting out to
+/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build
+----------------------------------------
+Checking for 'clang' (C compiler)
+find program=['clang'] paths=['/Users/asdfang/miniconda2/envs/HarmonizeMe/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin', '/Library/TeX/texbin'] var='CC' -> ['/usr/bin/clang']
+find program=['ar'] paths=['/Users/asdfang/miniconda2/envs/HarmonizeMe/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin', '/Library/TeX/texbin'] var='AR' -> ['/usr/bin/ar']
+/usr/bin/clang
+----------------------------------------
+Checking for header stdlib.h
+==>
+#include <stdlib.h>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] Compiling [32mbuild/.conf_check_a8891121fd43e6ca20c7384b5d48656b/test.c[0m
+
+['/usr/bin/clang', '-g', '-Wall', '-Wextra', '-fPIC', '-DHAVE_SOURCE_APPLE_AUDIO=1', '-DHAVE_SINK_APPLE_AUDIO=1', '-DHAVE_ACCELERATE=1', '../test.c', '-c', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_a8891121fd43e6ca20c7384b5d48656b/testbuild/test.c.1.o']
+[2/2] Linking [33mbuild/.conf_check_a8891121fd43e6ca20c7384b5d48656b/testbuild/testprog[0m
+
+['/usr/bin/clang', 'test.c.1.o', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_a8891121fd43e6ca20c7384b5d48656b/testbuild/testprog', '-framework', 'CoreFoundation', '-framework', 'AudioToolbox', '-framework', 'Accelerate']
+yes
+----------------------------------------
+Checking for header stdio.h
+==>
+#include <stdio.h>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] Compiling [32mbuild/.conf_check_ccd58104a020056c6d6c26eb47bb54ab/test.c[0m
+
+['/usr/bin/clang', '-g', '-Wall', '-Wextra', '-fPIC', '-DHAVE_SOURCE_APPLE_AUDIO=1', '-DHAVE_SINK_APPLE_AUDIO=1', '-DHAVE_ACCELERATE=1', '-DHAVE_STDLIB_H=1', '../test.c', '-c', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_ccd58104a020056c6d6c26eb47bb54ab/testbuild/test.c.1.o']
+[2/2] Linking [33mbuild/.conf_check_ccd58104a020056c6d6c26eb47bb54ab/testbuild/testprog[0m
+
+['/usr/bin/clang', 'test.c.1.o', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_ccd58104a020056c6d6c26eb47bb54ab/testbuild/testprog', '-framework', 'CoreFoundation', '-framework', 'AudioToolbox', '-framework', 'Accelerate']
+yes
+----------------------------------------
+Checking for header math.h
+==>
+#include <math.h>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] Compiling [32mbuild/.conf_check_849f7740757a0a2fee028dd753bc33ce/test.c[0m
+
+['/usr/bin/clang', '-g', '-Wall', '-Wextra', '-fPIC', '-DHAVE_SOURCE_APPLE_AUDIO=1', '-DHAVE_SINK_APPLE_AUDIO=1', '-DHAVE_ACCELERATE=1', '-DHAVE_STDLIB_H=1', '-DHAVE_STDIO_H=1', '../test.c', '-c', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_849f7740757a0a2fee028dd753bc33ce/testbuild/test.c.1.o']
+[2/2] Linking [33mbuild/.conf_check_849f7740757a0a2fee028dd753bc33ce/testbuild/testprog[0m
+
+['/usr/bin/clang', 'test.c.1.o', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_849f7740757a0a2fee028dd753bc33ce/testbuild/testprog', '-framework', 'CoreFoundation', '-framework', 'AudioToolbox', '-framework', 'Accelerate']
+yes
+----------------------------------------
+Checking for header string.h
+==>
+#include <string.h>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] Compiling [32mbuild/.conf_check_f7157793b6fadc0792e9bbd9e53a2d3c/test.c[0m
+
+['/usr/bin/clang', '-g', '-Wall', '-Wextra', '-fPIC', '-DHAVE_SOURCE_APPLE_AUDIO=1', '-DHAVE_SINK_APPLE_AUDIO=1', '-DHAVE_ACCELERATE=1', '-DHAVE_STDLIB_H=1', '-DHAVE_STDIO_H=1', '-DHAVE_MATH_H=1', '../test.c', '-c', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_f7157793b6fadc0792e9bbd9e53a2d3c/testbuild/test.c.1.o']
+[2/2] Linking [33mbuild/.conf_check_f7157793b6fadc0792e9bbd9e53a2d3c/testbuild/testprog[0m
+
+['/usr/bin/clang', 'test.c.1.o', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_f7157793b6fadc0792e9bbd9e53a2d3c/testbuild/testprog', '-framework', 'CoreFoundation', '-framework', 'AudioToolbox', '-framework', 'Accelerate']
+yes
+----------------------------------------
+Checking for header limits.h
+==>
+#include <limits.h>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] Compiling [32mbuild/.conf_check_808b7db94e5338941c07df6f7bd56d44/test.c[0m
+
+['/usr/bin/clang', '-g', '-Wall', '-Wextra', '-fPIC', '-DHAVE_SOURCE_APPLE_AUDIO=1', '-DHAVE_SINK_APPLE_AUDIO=1', '-DHAVE_ACCELERATE=1', '-DHAVE_STDLIB_H=1', '-DHAVE_STDIO_H=1', '-DHAVE_MATH_H=1', '-DHAVE_STRING_H=1', '../test.c', '-c', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_808b7db94e5338941c07df6f7bd56d44/testbuild/test.c.1.o']
+[2/2] Linking [33mbuild/.conf_check_808b7db94e5338941c07df6f7bd56d44/testbuild/testprog[0m
+
+['/usr/bin/clang', 'test.c.1.o', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_808b7db94e5338941c07df6f7bd56d44/testbuild/testprog', '-framework', 'CoreFoundation', '-framework', 'AudioToolbox', '-framework', 'Accelerate']
+yes
+----------------------------------------
+Checking for C99 __VA_ARGS__ macro
+==>
+
+#include <stdio.h>
+#define AUBIO_ERR(...) fprintf(stderr, __VA_ARGS__)
+
+<==
+[1/2] Compiling [32mbuild/.conf_check_3af10a4313a75eb40cc675c545af9c82/test.c[0m
+
+['/usr/bin/clang', '-g', '-Wall', '-Wextra', '-fPIC', '-DHAVE_SOURCE_APPLE_AUDIO=1', '-DHAVE_SINK_APPLE_AUDIO=1', '-DHAVE_ACCELERATE=1', '-DHAVE_STDLIB_H=1', '-DHAVE_STDIO_H=1', '-DHAVE_MATH_H=1', '-DHAVE_STRING_H=1', '-DHAVE_LIMITS_H=1', '../test.c', '-c', '-o', '/Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2/build/.conf_check_3af10a4313a75eb40cc675c545af9c82/testbuild/test.c.1.o']
+[2/2] Linking [33mbuild/.conf_check_3af10a4313a75eb40cc675c545af9c82/testbuild/libtestprog.a[0m
+
+['/usr/bin/ar', 'rcs', 'libtestprog.a', 'test.c.1.o']
+err: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libtestprog.a(test.c.1.o) has no symbols
+warning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: warning for library: libtestprog.a the table of contents is empty (no object file members in the library define global symbols)
+
+yes
+----------------------------------------
+Checking for FFT implementation
+vDSP
+----------------------------------------
+Checking for program 'pkg-config'
+/usr/local/bin/pkg-config
+find program=['pkg-config'] paths=['/Users/asdfang/miniconda2/envs/HarmonizeMe/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin', '/Library/TeX/texbin'] var='PKGCONFIG' -> ['/usr/local/bin/pkg-config']
+----------------------------------------
+Checking for 'sndfile' >= 1.0.4
+['/usr/local/bin/pkg-config', '--atleast-version=1.0.4', 'sndfile']
+not found
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: The configuration failed
+----------------------------------------
+Checking for 'samplerate' >= 0.0.15
+['/usr/local/bin/pkg-config', '--atleast-version=0.0.15', 'samplerate']
+not found
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: The configuration failed
+----------------------------------------
+Checking for 'jack'
+['/usr/local/bin/pkg-config', '--cflags', '--libs', 'jack']
+err: Package jack was not found in the pkg-config search path.
+Perhaps you should add the directory containing `jack.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'jack' found
+
+not found
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: The configuration failed
+----------------------------------------
+Checking for 'libavcodec' >= 54.35.0
+['/usr/local/bin/pkg-config', '--atleast-version=54.35.0', 'libavcodec']
+not found
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: The configuration failed
+----------------------------------------
+Checking for 'libavformat' >= 52.3.0
+['/usr/local/bin/pkg-config', '--atleast-version=52.3.0', 'libavformat']
+not found
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: The configuration failed
+----------------------------------------
+Checking for 'libavutil' >= 52.3.0
+['/usr/local/bin/pkg-config', '--atleast-version=52.3.0', 'libavutil']
+not found
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: The configuration failed
+----------------------------------------
+Checking for 'libavresample' >= 1.0.1
+['/usr/local/bin/pkg-config', '--atleast-version=1.0.1', 'libavresample']
+not found
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: The configuration failed
+----------------------------------------
+Checking for all libav libraries
+not found
+----------------------------------------
+Checking for program 'txt2man'
+not found
+find program=['txt2man'] paths=['/Users/asdfang/miniconda2/envs/HarmonizeMe/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin', '/Library/TeX/texbin'] var='TXT2MAN' -> None
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: Could not find the program ['txt2man']
+txt2man was not found (ignoring)
+----------------------------------------
+Checking for program 'doxygen'
+not found
+find program=['doxygen'] paths=['/Users/asdfang/miniconda2/envs/HarmonizeMe/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin', '/Library/TeX/texbin'] var='DOXYGEN' -> None
+from /Users/asdfang/Desktop/16WINTER/352EECSmachineperceptioninmusic/finalproject/HarmonizeMe/Webpage/python/aubio-0.4.2: Could not find the program ['doxygen']
+doxygen was not found (ignoring)
