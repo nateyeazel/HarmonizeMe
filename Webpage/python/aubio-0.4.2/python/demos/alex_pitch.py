@@ -27,7 +27,7 @@ pitch_o.set_tolerance(tolerance)
 
 pitches = []
 confidences = []
-
+number = 0
 # total number of frames read
 total_frames = 0
 while True:
@@ -40,11 +40,14 @@ while True:
     pitches += [pitch]
     confidences += [confidence]
     total_frames += read
+    number = number + 1
     if read < hop_s: break
 
 if 0: sys.exit(0)
 
 print pitches
+print confidences
+print number
 '''
 from numpy import array, ma
 import matplotlib.pyplot as plt
