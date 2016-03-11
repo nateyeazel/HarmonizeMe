@@ -7,11 +7,86 @@ from aubio import source, pitch, freqtomidi, onset
 
 import argparse
 import librosa
+import numpy
+
+#gets midi number of the pitch
+#this file should only hold one note
+def determine_pitch(pitchfile):
+	notes = delete_zeros(getpitches(pitchfile, 44100))
+	midi_num = numpy.around(numpy.mean(notes))
+	#print notes
+	#print midi_num
+	return midi_num #midi_num is the tonic
+
+#given a pitch in midi, return the sd of it in relation to the tonic in midi
+def pitch_in_sd(pitch, tonic):
+	half_steps_above = (pitch - tonic) % 12
+	if half_steps_above == 0:
+		return 1
+	elif half_steps_above == 2:
+		return 2
+	elif half_steps_above == 4:
+		return 3
+	elif half_steps_above == 5:
+		return 4
+	elif half_steps_above == 7:
+		return 5
+	elif half_steps_above == 9:
+		return 6
+	elif half_steps_above == 11:
+		return 7
+
+#given a pitch in sd, returns how many halfsteps above the tonic is
+def sd_to_halfstepsabove(sd):
+	if sd == 1:
+		return 0
+	elif sd == 2:
+		return 2
+	elif sd == 3:
+		return 4
+	elif sd == 4:
+		return 5
+	elif sd == 5:
+		return 7
+	elif sd == 6:
+		return 9
+	elif sd == 7:
+		return 11
+
+#asdf
+#given chord, sets mid and bass to halfstep distance away from melody
+def sd_to_halfsteps(chord):
+	hs_above_chord = []
+	for pitch in chord:
+		hs_above_chord.append(sd_to_halfstepsabove(pitch))
+
+	hs_chord = []
+	top = hs_above_chord[0]
+	mid = hs_above_chord[1]
+	bass = hs_above_chord[2]
+
+	#top note
+	hs_chord.append(0)
+
+	#middle note
+	mid_hs = mid - top
+	#if sd of mid is larger than top
+	if mid > top:
+		hs_chord.append(mid_hs - 12)
+	else:
+		hs_chord.append(mid_hs)
+
+	#bass note
+	hs_chord.append(bass - top - 12)
+	return hs_chord
 
 
-
-
-
+def delete_zeros(alist):
+	newlist = []
+	for element in alist:
+		if element != 0.0:
+			newlist.append(element)
+	return newlist
 
 def getpitches(filename, samplerate):
 
@@ -55,13 +130,16 @@ def getpitches(filename, samplerate):
 
 	if 0: sys.exit(0)
 
+	'''
 	print onsets
 	print pitches
 	print confidences
 	print number
+	'''
 
-# getpitches(filename, samplerate)
+	return pitches
 
+# 
 
 
 def adjust_tuning(input_file, output_file):
@@ -102,20 +180,33 @@ def process_arguments(args):
 
 
 if len(sys.argv) < 2:
-    print "Usage: %s <inputfilename> <output_file>" % sys.argv[0]
+    print "Usage: %s <inputfilename1>  <inputfilename2> [samplerate]" % sys.argv[0]
     sys.exit(1)
 
-input_file = sys.argv[1]
-output_file = sys.argv[2]
-adjust_tuning(input_file, output_file)
+filename = sys.argv[1]
+melodyfilename = sys.argv[2]
+downsample = 1
+samplerate = 44100 / downsample
+if len( sys.argv ) > 3: samplerate = int(sys.argv[3])
+# adjust_tuning(input_file, output_file)
+getpitches(filename, samplerate)
 
-# downsample = 1
-# samplerate = 44100 / downsample
+'''
+GETTING TONIC AND EXPITCH
+'''
+
+tonic = determine_pitch(filename)
+expitch = determine_pitch(melodyfilename)
+
 # if len( sys.argv ) > 2: samplerate = int(sys.argv[2])
 
 # if __name__ == '__main__':
 #     # Run the beat tracker
 #     adjust_tuning(params['input_file'], params['output_file'])
+
+
+
+
 
 
 #sd = scale_degree
@@ -241,25 +332,88 @@ def fill_chord(sd, chord):
 	filled.append(bass_voice(chord))
 	return filled
 
+
+#returns the progression but with pitches in halfsteps above tonic
+#returns [[0, 4, 0], [2, 11, 7], [4, 7, 0], [2, 9, 5], [0, 9, 5], [11, 2, 7], [0, 4, 0]]
+#when given [[1, 3, 1], [2, 7, 5], [3, 5, 1], [2, 6, 4], [1, 6, 4], [7, 2, 5], [1, 3, 1]]
+def progression_halfsteps(progression):
+	prog_halfstep = []
+	for chord in progression:
+		chrd = []
+		for pitch in chord:
+			chrd.append(sd_to_halfstepsabove(pitch))
+		prog_halfstep.append(chrd)
+	return prog_halfstep
+
+#returns the progression in chords with how much to shift from the melodic note
+#returns [[0, -8, -12], [0, -3, -7], [0, -9, -16], [0, -5, -9], [0, -3, -7], [0, -9, -16], [0, -8, -12]]
+#when given [[1, 3, 1], [2, 7, 5], [3, 5, 1], [2, 6, 4], [1, 6, 4], [7, 2, 5], [1, 3, 1]]
+def progression_hs_away(progression):
+	prog_hsaway = []
+	for chord in progression:
+		prog_hsaway.append(sd_to_halfsteps(chord))
+	return prog_hsaway
+
+
 #Takes in a melody and chosen progression by user and returns the realized form of the progression.
 #example: with the melody [1, 2, 3, 2, 1, 7, 1]
 # You have picked this progression:
 # ['I', 'V', 'I', 'ii6', 'IV', 'V', 'I']
 # Here is your realized progression: 
 # [[1, 3, 1], [2, 7, 5], [3, 5, 1], [2, 6, 4], [1, 6, 4], [7, 2, 5], [1, 3, 1]]
-
-def harmonize(melody, progression):
+def harmonize(melody, progression, tonic):
 	realized = []
 	for pitch, chord_choice in zip(melody, progression):
 		realized.append(fill_chord(pitch, chord_choice))
 	print 'Here is your realized progression: '
 	print realized
+	print 'Here is your realized progression in halfsteps away from melodic note: '
+	prog_hs = progression_hs_away(realized)
+	print prog_hs
+
+	'''
+	making the new pitches, assuming this melody is only one pitch long
+	'''
+	sounding_pitch_in_melody, sr = librosa.core.load(melodyfilename, sr=44100)
+	almost_sounding_chord = []
+	#top note
+	almost_sounding_chord.append(sounding_pitch_in_melody)
+
+	#middle note
+	almost_sounding_chord.append(librosa.effects.pitch_shift(sounding_pitch_in_melody, sr,
+		n_steps = prog_hs[0][1]))
+
+	#bottom note
+	almost_sounding_chord.append(librosa.effects.pitch_shift(sounding_pitch_in_melody, sr,
+		n_steps = prog_hs[0][2]))
+
+	sounding_chord = almost_sounding_chord[0] + almost_sounding_chord[1] + almost_sounding_chord[2]
+	librosa.output.write_wav('soundingchord4.wav', sounding_chord, sr)
+
+#fdsa
 	return realized
 
 
 
 
+#has this above:
+#tonic = determine_pitch(filename)
+#expitch = determine_pitch(melodyfilename)
+#
+
+#print pitch_in_sd(expitch, tonic)
+
+ex1_melody = []
+ex1_melody.append(pitch_in_sd(expitch, tonic))
+ex1_prog = choose_chords(ex1_melody)
+harmonize(ex1_melody, ex1_prog, tonic)
+
+
+
+
+'''
 #running
 ex_melody = [1, 2, 3, 2, 1, 7, 1]
 ex_prog = choose_chords(ex_melody)
 harmonize(ex_melody, ex_prog)
+'''
