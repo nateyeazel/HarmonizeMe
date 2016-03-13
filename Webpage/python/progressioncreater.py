@@ -127,12 +127,14 @@ def delete_zeros(alist):
 			newlist.append(element)
 	return newlist
 
+HOP_SIZE = 512
+
 def getpitches(filename, samplerate):
 
 	#downsample = 1
 	#samplerate = 44100 / downsample	
 	win_s = 4096 / downsample # fft size
-	hop_s = 512  / downsample # hop size
+	hop_s = HOP_SIZE  / downsample # hop size
 
 	s = source(filename, samplerate, hop_s)
 	samplerate = s.samplerate
@@ -148,7 +150,7 @@ def getpitches(filename, samplerate):
 
 	pitches = []
 	confidences = []
-	number = 0
+	#number = 0
 	# total number of frames read
 	total_frames = 0
 	while True:
@@ -164,7 +166,7 @@ def getpitches(filename, samplerate):
 	    pitches += [pitch1]
 	    confidences += [confidence]
 	    total_frames += read
-	    number = number + 1
+	    #number = number + 1
 	    if read < hop_s: break
 
 	if 0: sys.exit(0)
@@ -174,8 +176,6 @@ def getpitches(filename, samplerate):
 	print pitches
 	print confidences
 	'''
-	print number
-	''
 
 	
 	return pitches, onsets
@@ -239,14 +239,14 @@ GETTING TONIC AND EXPITCH
 
 tonic = determine_pitch(filename)
 #expitch = determine_pitch(melodyfilename) #not doing just a single pitch anymore
-print 'tonic midi number'
+print 'Tonic midi number:'
 print tonic
 #print expitch
 
 pitchesmelody_verb, onset_samps = getpitches(melodyfilename, 44100)
-print 'aubio melody'
+#print 'aubio melody'
 #print pitchesmelody_verb
-print 'aubio onsets'
+#print 'aubio onsets'
 #print onset_samps
 
 
@@ -256,9 +256,9 @@ pitch_indices = []
 onset_samps = delete_zeros(onset_samps)
 
 for ii in range(len(onset_samps)):
-	pitch_indices.append(numpy.around(onset_samps[ii] / 512)) #change this to hopsize
-print 'pitch indices'
-print pitch_indices
+	pitch_indices.append(numpy.around(onset_samps[ii] / HOP_SIZE)) #change this to hopsize
+#print 'pitch indices'
+#print pitch_indices
 
 '''
 splicing the pitch array
@@ -288,10 +288,8 @@ pitchspliced.append(pitchesmelody_verb[pitch_indices[-1]:len(pitchesmelody_verb)
 for ii in range(len(pitchspliced)):
 	#melodysd.append(determine_pitch(pitchspliced[ii]))
 	determined_pitch = determine_pitch(pitchspliced[ii])
-	print determined_pitch
+	#print determined_pitch
 	melodysd.append(pitch_in_sd(determined_pitch, tonic))
-print melodysd
-print len(melodysd)
 
 '''
 splicing the audio; audiomelody is np.array representing wav file
@@ -309,8 +307,6 @@ for ii in range(len(onset_samps) - 1):
 	audiospliced.append(audiomelody[x:y])
 #getting the last note
 audiospliced.append(audiomelody[onset_samps[-1]:len(audiomelody)])
-print len(audiospliced)
-print tonic
 
 '''
 librosa.output.write_wav('hello0.wav', audiospliced[0], sr=44100)
@@ -561,6 +557,7 @@ def harmonize(melody, progression, tonic, splicedaudio):
 #running example
 #ex1_melody = []
 #ex1_melody.append(pitch_in_sd(expitch, tonic))
+print 'This is your melody in scale degrees (ignore 0s)'
 print melodysd
 ex1_prog = choose_chords(melodysd)
 harmonize(melodysd, ex1_prog, tonic, audiospliced)
