@@ -294,7 +294,7 @@ print melodysd
 print len(melodysd)
 
 '''
-splicing the audio
+splicing the audio; audiomelody is np.array representing wav file
 '''
 audiomelody, sr = librosa.core.load(melodyfilename, sr=44100)
 #print 'len of audiomelody'
@@ -489,7 +489,7 @@ def progression_hs_away(progression):
 # ['I', 'V', 'I', 'ii6', 'IV', 'V', 'I']
 # Here is your realized progression: 
 # [[1, 3, 1], [2, 7, 5], [3, 5, 1], [2, 6, 4], [1, 6, 4], [7, 2, 5], [1, 3, 1]]
-def harmonize(melody, progression, tonic):
+def harmonize(melody, progression, tonic, splicedaudio):
 	realized = []
 	for pitch, chord_choice in zip(melody, progression):
 		realized.append(fill_chord(pitch, chord_choice))
@@ -501,6 +501,7 @@ def harmonize(melody, progression, tonic):
 
 	'''
 	making the new pitches, assuming this melody is only one pitch long
+	'''
 	'''
 	sounding_pitch_in_melody, sr = librosa.core.load(melodyfilename, sr=44100)
 	almost_sounding_chord = []
@@ -518,6 +519,33 @@ def harmonize(melody, progression, tonic):
 
 	sounding_chord = almost_sounding_chord[0] + almost_sounding_chord[1] + almost_sounding_chord[2]
 	librosa.output.write_wav(outputname, sounding_chord, sr)
+	'''
+
+
+
+	'''
+	making the new pitches in a long melody; taking in melodysd, ex1_prog, tonic, splicedaudio
+	'''
+	complete = []
+	complete = numpy.array(complete)
+	for ii in range(len(melody)):
+		npchord = [] #has 3 np arrays representing notes
+		melodynote = numpy.array(splicedaudio[ii])
+		npchord.append(melodynote)
+		npchord.append(librosa.effects.pitch_shift(melodynote, 44100, n_steps = prog_hs[ii][1]))
+		npchord.append(librosa.effects.pitch_shift(melodynote, 44100, n_steps = prog_hs[ii][2]))
+		npchord = numpy.array(npchord)
+		soundingchord = npchord[0] + npchord[1] + npchord[2]
+		#complete.append(soundingchord)
+		complete = numpy.concatenate((complete, soundingchord))
+
+	#complete = (numpy.array(complete)).flatten()
+	outputname = str(raw_input('Please enter a file name for your output file (include .wav): '))
+	librosa.output.write_wav(outputname, complete, 44100)
+
+
+
+
 
 #fdsa
 	return realized
@@ -535,7 +563,7 @@ def harmonize(melody, progression, tonic):
 #ex1_melody.append(pitch_in_sd(expitch, tonic))
 print melodysd
 ex1_prog = choose_chords(melodysd)
-harmonize(melodysd, ex1_prog, tonic)
+harmonize(melodysd, ex1_prog, tonic, audiospliced)
 
 
 
