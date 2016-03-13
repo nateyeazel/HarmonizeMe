@@ -29,10 +29,8 @@ def determine_pitch(pitchfile): #it will either be a filename or a numpy array
 
 	#midi_num = numpy.around(numpy.median(finalnotes))
 	midi_num = numpy.around(numpy.median(notes))
-
+	
 	return midi_num #midi_num is the tonic
-
-
 
 
 #given a pitch in midi, return the sd of it in relation to the tonic in midi
