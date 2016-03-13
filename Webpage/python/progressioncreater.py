@@ -11,33 +11,71 @@ import numpy
 
 #gets midi number of the pitch
 #this file should only hold one note
-def determine_pitch(pitchfile):
-	notes = delete_zeros(getpitches(pitchfile, 44100))
+def determine_pitch(pitchfile): #it will either be a filename or a numpy array
+	if isinstance(pitchfile, str): #if it's a file
+		pitches, onsets = getpitches(pitchfile, 44100)
+		notes = delete_zeros(pitches)
+		#print notes
+		#print midi_num
+	else: #if it's a numpy array
+		notes = delete_zeros(pitchfile) #sorry this is named badly
+
+	'''
+	finalnotes = []
+	for ii in range(len(notes)):
+		if notes[ii] > 40 and notes[ii] < 84:
+			finalnotes.(append(notes[ii]))
+	'''
+
+	#midi_num = numpy.around(numpy.median(finalnotes))
 	midi_num = numpy.around(numpy.median(notes))
-	#print notes
-	#print midi_num
+
 	return midi_num #midi_num is the tonic
+
+
+
 
 #given a pitch in midi, return the sd of it in relation to the tonic in midi
 def pitch_in_sd(pitch, tonic):
-	half_steps_above = (pitch - tonic) % 12
+	p = pitch
+	t = tonic
+	diff = p - t
+	if numpy.isnan(pitch):
+		return 0
+	positive = False
+	while diff < 0:
+		diff = diff + 12
+	half_steps_above = diff % 12
 	if half_steps_above == 0:
+		return 1
+	elif half_steps_above == 1:
 		return 1
 	elif half_steps_above == 2:
 		return 2
+	elif half_steps_above == 3:
+		return 3
 	elif half_steps_above == 4:
 		return 3
 	elif half_steps_above == 5:
 		return 4
+	elif half_steps_above == 6:
+		return 5
 	elif half_steps_above == 7:
 		return 5
+	elif half_steps_above == 8:
+		return 6
 	elif half_steps_above == 9:
 		return 6
+	elif half_steps_above == 10:
+		return 7
 	elif half_steps_above == 11:
 		return 7
 
+#USEFUL
 #given a pitch in sd, returns how many halfsteps above the tonic is
 def sd_to_halfstepsabove(sd):
+	if sd == 0:
+		return 0
 	if sd == 1:
 		return 0
 	elif sd == 2:
@@ -53,9 +91,10 @@ def sd_to_halfstepsabove(sd):
 	elif sd == 7:
 		return 11
 
-#asdf
 #given chord, sets mid and bass to halfstep distance away from melody
 def sd_to_halfsteps(chord):
+	if chord == [0, 0, 0]:
+		return [0, 0, 0]
 	hs_above_chord = []
 	for pitch in chord:
 		hs_above_chord.append(sd_to_halfstepsabove(pitch))
@@ -134,10 +173,13 @@ def getpitches(filename, samplerate):
 	print onsets
 	print pitches
 	print confidences
-	print number
 	'''
+	print number
+	''
 
-	return pitches
+	
+	return pitches, onsets
+
 
 # 
 
@@ -189,27 +231,110 @@ downsample = 1
 samplerate = 44100 / downsample
 if len( sys.argv ) > 3: samplerate = int(sys.argv[3])
 # adjust_tuning(input_file, output_file)
-getpitches(filename, samplerate)
+#getpitches(filename, samplerate)
 
 '''
 GETTING TONIC AND EXPITCH
 '''
 
 tonic = determine_pitch(filename)
-expitch = determine_pitch(melodyfilename)
+#expitch = determine_pitch(melodyfilename) #not doing just a single pitch anymore
+print 'tonic midi number'
 print tonic
-print expitch
+#print expitch
+
+pitchesmelody_verb, onset_samps = getpitches(melodyfilename, 44100)
+print 'aubio melody'
+#print pitchesmelody_verb
+print 'aubio onsets'
+#print onset_samps
+
+
+pitch_indices = []
+
+#get rid of zero onset
+onset_samps = delete_zeros(onset_samps)
+
+for ii in range(len(onset_samps)):
+	pitch_indices.append(numpy.around(onset_samps[ii] / 512)) #change this to hopsize
+print 'pitch indices'
+print pitch_indices
+
+'''
+splicing the pitch array
+'''
+pitchspliced = []
+#getting the starting silence
+pitchspliced.append(pitchesmelody_verb[0:pitch_indices[0]])
+#getting the rest of the sound (except for the last)
+for ii in range(len(pitch_indices) - 1):
+	x = pitch_indices[ii]
+	y = pitch_indices[ii + 1]
+	pitchspliced.append(pitchesmelody_verb[x:y])
+#getting the last note
+
+'''
+melodysd1 = []
+pitchspliced.append(pitchesmelody_verb[pitch_indices[-1]:len(pitchesmelody_verb)])
+for ii in range(len(pitchspliced)):
+	melodysd1.append(determine_pitch(pitchspliced[ii]))
+	#melodysd.append(pitch_in_sd(determine_pitch(pitchspliced[ii]), tonic))
+print melodysd1
+print len(melodysd1)
+'''
+
+melodysd = []
+pitchspliced.append(pitchesmelody_verb[pitch_indices[-1]:len(pitchesmelody_verb)])
+for ii in range(len(pitchspliced)):
+	#melodysd.append(determine_pitch(pitchspliced[ii]))
+	determined_pitch = determine_pitch(pitchspliced[ii])
+	print determined_pitch
+	melodysd.append(pitch_in_sd(determined_pitch, tonic))
+print melodysd
+print len(melodysd)
+
+'''
+splicing the audio
+'''
+audiomelody, sr = librosa.core.load(melodyfilename, sr=44100)
+#print 'len of audiomelody'
+#print len(audiomelody)
+audiospliced = []
+#getting the starting silence
+audiospliced.append(audiomelody[0:onset_samps[0]])
+#getting the rest of the sound (except for the last)
+for ii in range(len(onset_samps) - 1):
+	x = onset_samps[ii]
+	y = onset_samps[ii + 1]
+	audiospliced.append(audiomelody[x:y])
+#getting the last note
+audiospliced.append(audiomelody[onset_samps[-1]:len(audiomelody)])
+print len(audiospliced)
+print tonic
+
+'''
+librosa.output.write_wav('hello0.wav', audiospliced[0], sr=44100)
+librosa.output.write_wav('hello1.wav', audiospliced[1], sr=44100)
+librosa.output.write_wav('hello2.wav', audiospliced[2], sr=44100)
+librosa.output.write_wav('hello3.wav', audiospliced[3], sr=44100)
+librosa.output.write_wav('hello4.wav', audiospliced[4], sr=44100)
+librosa.output.write_wav('hello5.wav', audiospliced[5], sr=44100)
+librosa.output.write_wav('hello6.wav', audiospliced[6], sr=44100)
+librosa.output.write_wav('hello7.wav', audiospliced[7], sr=44100)
+librosa.output.write_wav('hello8.wav', audiospliced[8], sr=44100)
+librosa.output.write_wav('hello9.wav', audiospliced[9], sr=44100)
+librosa.output.write_wav('hello10.wav', audiospliced[10], sr=44100)
+librosa.output.write_wav('hello11.wav', audiospliced[11], sr=44100)
+librosa.output.write_wav('hello12.wav', audiospliced[12], sr=44100)
+'''
+
+
 
 # if len( sys.argv ) > 2: samplerate = int(sys.argv[2])
 
 # if __name__ == '__main__':
 #     # Run the beat tracker
 #     adjust_tuning(params['input_file'], params['output_file'])
-
-
-
-
-
 
 #sd = scale_degree
 #chord: [top voice, middle voice, bass]
@@ -222,28 +347,25 @@ print expitch
 def possible_chords(melody):
 	options = []
 	for sd in melody:
-		assert (sd >= 1 and sd <= 7), "scale degree must be integer from 1 to 7"
+		poss_chords = []
+		assert (sd >= 0 and sd <= 7), "scale degree must be integer from 0 to 7"
+		if sd == 0:
+			poss_chords.append('please insert \'skip\' ')
 		if sd == 1:
-			poss_chords = []
 			poss_chords.append('I')
 			poss_chords.append('IV')
 		elif sd == 2:
-			poss_chords = []	
 			poss_chords.append('ii6')
 			poss_chords.append('V')
 		elif sd == 3:
-			poss_chords = []
 			poss_chords.append('I')
 		elif sd == 4 or sd == 6:
-			poss_chords = []
 			poss_chords.append('ii6')
 			poss_chords.append('IV')
 		elif sd == 5:
-			poss_chords = []
 			poss_chords.append('I')
 			poss_chords.append('V')
 		elif sd == 7:
-			poss_chords = []
 			poss_chords.append('V')
 		options.append(poss_chords)
 	return options
@@ -287,6 +409,8 @@ def choose_chords(melody):
 #When sd and chord don't imply the same pitch, it returns the only remaining pitch.
 #When sd and chord imply the same pitch, it returns the third above the bass.
 def mid_voice(sd, chord):
+	if sd == 0:
+		return 0
 	if sd == 1:
 		if chord == 'I':
 			return 3
@@ -317,6 +441,8 @@ def mid_voice(sd, chord):
 
 #Returns the scale degree of the bass voice, given the chord.
 def bass_voice(chord):
+	if chord == 'skip':
+		return 0
 	if chord == 'I':
 		return 1
 	elif chord == 'ii6' or chord == 'IV':
@@ -334,7 +460,7 @@ def fill_chord(sd, chord):
 	filled.append(bass_voice(chord))
 	return filled
 
-
+#THIS ONE IS USELESS
 #returns the progression but with pitches in halfsteps above tonic
 #returns [[0, 4, 0], [2, 11, 7], [4, 7, 0], [2, 9, 5], [0, 9, 5], [11, 2, 7], [0, 4, 0]]
 #when given [[1, 3, 1], [2, 7, 5], [3, 5, 1], [2, 6, 4], [1, 6, 4], [7, 2, 5], [1, 3, 1]]
@@ -395,19 +521,6 @@ def harmonize(melody, progression, tonic):
 
 #fdsa
 	return realized
-'''
-tonic, sr = librosa.core.load(filename, sr=44100)
-librosa.output.write_wav('c#554.wav', librosa.effects.pitch_shift(tonic, sr,
-	n_steps = 4), sr)
-librosa.output.write_wav('d587.wav', librosa.effects.pitch_shift(tonic, sr,
-	n_steps = 5), sr)
-librosa.output.write_wav('e659.wav', librosa.effects.pitch_shift(tonic, sr,
-	n_steps = 7), sr)
-librosa.output.write_wav('f#740.wav', librosa.effects.pitch_shift(tonic, sr,
-	n_steps = 9), sr)
-librosa.output.write_wav('g#831.wav', librosa.effects.pitch_shift(tonic, sr,
-	n_steps = 11), sr)
-'''
 
 #has this above:
 #tonic = determine_pitch(filename)
@@ -418,10 +531,11 @@ librosa.output.write_wav('g#831.wav', librosa.effects.pitch_shift(tonic, sr,
 
 
 #running example
-ex1_melody = []
-ex1_melody.append(pitch_in_sd(expitch, tonic))
-ex1_prog = choose_chords(ex1_melody)
-harmonize(ex1_melody, ex1_prog, tonic)
+#ex1_melody = []
+#ex1_melody.append(pitch_in_sd(expitch, tonic))
+print melodysd
+ex1_prog = choose_chords(melodysd)
+harmonize(melodysd, ex1_prog, tonic)
 
 
 
