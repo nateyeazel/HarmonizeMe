@@ -13,7 +13,7 @@ import numpy
 #this file should only hold one note
 def determine_pitch(pitchfile):
 	notes = delete_zeros(getpitches(pitchfile, 44100))
-	midi_num = numpy.around(numpy.mean(notes))
+	midi_num = numpy.around(numpy.median(notes))
 	#print notes
 	#print midi_num
 	return midi_num #midi_num is the tonic
@@ -197,6 +197,8 @@ GETTING TONIC AND EXPITCH
 
 tonic = determine_pitch(filename)
 expitch = determine_pitch(melodyfilename)
+print tonic
+print expitch
 
 # if len( sys.argv ) > 2: samplerate = int(sys.argv[2])
 
@@ -386,15 +388,26 @@ def harmonize(melody, progression, tonic):
 	#bottom note
 	almost_sounding_chord.append(librosa.effects.pitch_shift(sounding_pitch_in_melody, sr,
 		n_steps = prog_hs[0][2]))
+	outputname = str(raw_input('Please enter a file name for your output file (include .wav): '))
 
 	sounding_chord = almost_sounding_chord[0] + almost_sounding_chord[1] + almost_sounding_chord[2]
-	librosa.output.write_wav('soundingchord4.wav', sounding_chord, sr)
+	librosa.output.write_wav(outputname, sounding_chord, sr)
 
 #fdsa
 	return realized
-
-
-
+'''
+tonic, sr = librosa.core.load(filename, sr=44100)
+librosa.output.write_wav('c#554.wav', librosa.effects.pitch_shift(tonic, sr,
+	n_steps = 4), sr)
+librosa.output.write_wav('d587.wav', librosa.effects.pitch_shift(tonic, sr,
+	n_steps = 5), sr)
+librosa.output.write_wav('e659.wav', librosa.effects.pitch_shift(tonic, sr,
+	n_steps = 7), sr)
+librosa.output.write_wav('f#740.wav', librosa.effects.pitch_shift(tonic, sr,
+	n_steps = 9), sr)
+librosa.output.write_wav('g#831.wav', librosa.effects.pitch_shift(tonic, sr,
+	n_steps = 11), sr)
+'''
 
 #has this above:
 #tonic = determine_pitch(filename)
@@ -403,6 +416,8 @@ def harmonize(melody, progression, tonic):
 
 #print pitch_in_sd(expitch, tonic)
 
+
+#running example
 ex1_melody = []
 ex1_melody.append(pitch_in_sd(expitch, tonic))
 ex1_prog = choose_chords(ex1_melody)
